@@ -2,6 +2,7 @@ from flask import current_app, url_for, Markup
 
 import os.path
 import urllib
+import re
 
 import qrcode
 
@@ -98,8 +99,7 @@ class QR(object):
     Checks if a qr code exists, generate it if needed.
     """
     def _localQR(self, message, dimension):
-        message = message.replace("https://", "").replace("http://", "").replace("/","")
-        fileName = urllib.quote_plus(message) + str(dimension) + str(self.margin) +".png"
+        fileName = urllib.quote_plus(re.sub(r'\W+', '', message)) + str(dimension) + str(self.margin) +".png"
         filePath = os.path.join(self.app.qr_folder, fileName)
         if (os.path.isfile(filePath)):
             print "qr exists, returning url"
